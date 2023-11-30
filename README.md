@@ -49,14 +49,4 @@ Welcome to the Flight Management System documentation. Below, you'll find key in
 ### Redis Cache Usage
 - Integration of Redis for caching and improved performance.
 
-## Code Repository
 
-Explore the project's source code, contribute, or report issues on our [GitHub Repository](link to GitHub repository). Your feedback and contributions are highly appreciated!
-
-## User Guide
-
-For detailed instructions on setting up, configuring, and using the Flight Management System, refer to our [Detailed User Guide](link to documentation). This guide covers various aspects, from installation to advanced functionalities.
-
-Feel free to engage with our community, report bugs, and contribute to the continuous improvement of the Flight Management System. If you have any questions or need further assistance, don't hesitate to reach out.
-
-Happy flying! 🛫
