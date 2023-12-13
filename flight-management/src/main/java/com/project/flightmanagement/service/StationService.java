@@ -21,20 +21,16 @@ public class StationService {
     public List<StationResponse> getAllStations() {
         return mapper.stationsToStationResponse(stationRepository.findAll());
     }
-
     public StationRequest createStation(StationRequest newStation) throws DataIntegrityViolationException {
         Station station =  mapper.stationRequestToStation(newStation);
         station.setCreateTime(LocalDateTime.now());
         stationRepository.save(station);
         return mapper.stationToStationRequest(station);
     }
-
     public StationResponse getStationById(Long stationId) {
         return mapper.stationToStationResponse(stationRepository.findById(stationId)
                 .orElseThrow(() -> new EntityNotFoundException(stationId, "User")));
     }
-
-
     public StationRequest updateStation(StationRequest updatedStation)  {
         Station existingStation = stationRepository.findById(updatedStation.getId()).orElseThrow(() -> new EntityNotFoundException(updatedStation.getId(),"Station"));
         mapper.updateStationFromStationRequest(updatedStation, existingStation);
@@ -44,7 +40,6 @@ public class StationService {
     public void deleteStation(Long stationId) {
         stationRepository.findById(stationId)
                 .orElseThrow(() -> new EntityNotFoundException(stationId, "Station"));
-
         stationRepository.deleteById(stationId);
 
     }

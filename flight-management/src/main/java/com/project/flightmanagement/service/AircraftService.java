@@ -1,4 +1,6 @@
 package com.project.flightmanagement.service;
+import com.project.flightmanagement.config.KeycloakConfig;
+import com.project.flightmanagement.config.RedisConfig;
 import com.project.flightmanagement.entity.Aircraft;
 import com.project.flightmanagement.exception.EntityNotFoundException;
 import com.project.flightmanagement.mapper.AircraftMapper;
@@ -6,6 +8,8 @@ import com.project.flightmanagement.repo.AircraftRepository;
 import com.project.flightmanagement.request.AircraftRequest;
 import com.project.flightmanagement.response.AircraftResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -18,6 +22,8 @@ import org.springframework.cache.annotation.Cacheable;
 public class AircraftService {
     private final AircraftRepository aircraftRepository;
     private final AircraftMapper mapper;
+    private final RedisConfig cacheManager;
+
     @Cacheable(value = "flightmanagement" , key = "'allAircrafts'")
     public List<AircraftResponse> getAllAircrafts() {
         System.out.println("Worked");
@@ -27,14 +33,16 @@ public class AircraftService {
 
     public AircraftRequest createAircraft(AircraftRequest newAircraft) {
         Aircraft createdAircraft = mapper.aircraftRequestToAircraft(newAircraft);
-
         if (createdAircraft == null) {
             throw new RuntimeException("Aircraft creation failed: mapper.aircraftRequestToAircraft returned null.");
         }
         createdAircraft.setCreateTime(LocalDateTime.now());
         aircraftRepository.save(createdAircraft);
+        cacheManager.updateFlightManagementCache();
         return mapper.aircraftToAircraftRequest(createdAircraft);
     }
+
+
 
     public AircraftResponse getAircraftById(Long aircraftId) {
         return mapper.aircraftToAircraftResponse(aircraftRepository.findById(aircraftId)
@@ -46,6 +54,7 @@ public class AircraftService {
         mapper.updateAircraftFromAircraftRequest(updatedAircraft, existingAircraft);
         existingAircraft.setUpdateTime(LocalDateTime.now());
         aircraftRepository.save(existingAircraft);
+        cacheManager.updateFlightManagementCache();
         return mapper.aircraftToAircraftRequest(aircraftRepository.save(existingAircraft));
     }
 

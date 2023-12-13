@@ -39,7 +39,8 @@ public class SecurityConfig  {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> {
-            web.ignoring().antMatchers(HttpMethod.POST, "/users/create","/auth/register","/auth/login");
+            web.ignoring().antMatchers(HttpMethod.POST, "/users/create","/auth/register","/users/saveUsers","/users/getUsersByThread","/auth/login");
+            web.ignoring().antMatchers(HttpMethod.GET, "/users/getUsersByThread");
         };
     }
 

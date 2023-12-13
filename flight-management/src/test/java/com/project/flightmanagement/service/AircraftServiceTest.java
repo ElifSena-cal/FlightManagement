@@ -67,9 +67,7 @@ class AircraftServiceTest {
         AircraftResponse expectedResponse = new AircraftResponse();
         when(aircraftRepository.findById(aircraftId)).thenReturn(Optional.of(aircraft));
         when(aircraftMapper.aircraftToAircraftResponse(aircraft)).thenReturn(expectedResponse);
-
         AircraftResponse result = aircraftService.getAircraftById(aircraftId);
-
         assertEquals(expectedResponse, result);
     }
 

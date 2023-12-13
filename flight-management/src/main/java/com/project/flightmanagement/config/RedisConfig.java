@@ -39,4 +39,9 @@ public class RedisConfig {
                 .cacheDefaults(redisCacheConfiguration)
                 .build();
     }
+
+    @CacheEvict(value = "flightmanagement", key = "'allAircrafts'")
+    public void updateFlightManagementCache() {
+        System.out.println("Flight management cache updated.");
+    }
 }

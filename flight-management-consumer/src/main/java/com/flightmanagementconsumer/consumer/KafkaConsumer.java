@@ -11,9 +11,20 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaConsumer {
     private final UserService userService;
-    @KafkaListener(topics = "NewTopic", groupId = "group_id")
+    private int messageCounter = 0;
+    private long startTime;
+
+    @KafkaListener(topics = "NewTopic", groupId = "group_id", concurrency = "3")
     public void consume(String message) {
-        userService.SaveUser(message);
-        System.out.println("message = " + message);
+       userService.SaveUser(message);
+        messageCounter++;
+        startTime = System.currentTimeMillis();
+        System.out.println(messageCounter);
+        if (messageCounter == 1001) {
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            System.out.println("All messages processed in " + elapsedTime + " milliseconds.");
+        }
     }
+
 }

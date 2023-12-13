@@ -35,7 +35,6 @@ public class KeyCloakService {
 
 
     public void addUser(UserRequest userDTO) {
-
         if (userExists(userDTO.getUserName())) {
             throw new DataIntegrityViolationException("User with the given username already exists.");
         }
@@ -45,7 +44,6 @@ public class KeyCloakService {
         if (!Objects.equals(201,response.getStatus())){
             throw new KeycloakServiceException("Error interacting with Keycloak");
         }
-
     }
 
     @NotNull
@@ -53,6 +51,7 @@ public class KeyCloakService {
         UserRepresentation user=new UserRepresentation();
         user.setEnabled(true);
         user.setUsername(userDTO.getUserName());
+        user.setFirstName(userDTO.getName());
 
         user.setLastName(userDTO.getSurname());
         user.setEmailVerified(true);
@@ -97,5 +96,22 @@ public class KeyCloakService {
 
         return jsonNode.get("access_token").asText();
     }
+    public void getUpdatedUserRepresentation(UserRequest updatedUserDTO) {
+            UsersResource usersResource = getUsersResource();
 
+            List<UserRepresentation> existingUsers = usersResource.search(updatedUserDTO.getUserName());
+
+            if (existingUsers.isEmpty()) {
+                throw new RuntimeException("User not found.");
+            }
+            UserRepresentation existingUser = existingUsers.get(0);
+
+            UserRepresentation updatedUser = new UserRepresentation();
+            updatedUser.setEnabled(existingUser.isEnabled());
+            updatedUser.setUsername(existingUser.getUsername());
+            updatedUser.setFirstName(updatedUserDTO.getName());  // Update first name
+            updatedUser.setLastName(updatedUserDTO.getSurname());  // Update last name
+            usersResource.get(existingUser.getId()).update(updatedUser);
+    }
 }
+

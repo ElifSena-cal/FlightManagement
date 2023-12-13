@@ -23,6 +23,13 @@ public class KafkaConfig {
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(config);
     }
+    public ConsumerFactory<String, String> consumerFactory(String groupId) {
+        Map<String, Object> props = new HashMap<>();
+
+        // required consumer factory properties
+
+        return new DefaultKafkaConsumerFactory<>(props);
+    }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<?,?> concurrentKafkaListenerContainerFactory() {

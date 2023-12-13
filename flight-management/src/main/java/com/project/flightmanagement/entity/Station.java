@@ -1,12 +1,7 @@
 package com.project.flightmanagement.entity;
-
 import com.sun.istack.NotNull;
 import lombok.*;
-
-
 import javax.persistence.*;
-
-
 import java.time.LocalDateTime;
 
 
